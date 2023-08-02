@@ -2,7 +2,7 @@ namespace TestingConsole;
 
 public static class ModHelperData {
     public const string WorksOnVersion = "37.3";
-    public const string Version = "1.0.2";
+    public const string Version = "1.0.4";
     public const string Name = "TestingConsole";
 
     public const string Description = "This mod adds a console for TESTING PURPOSES\n" +
