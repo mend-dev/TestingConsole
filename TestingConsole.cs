@@ -72,11 +72,12 @@ public class ConsoleUi : MonoBehaviour {
                 game.SpawnBloons(adjustedBloonId, amount, spacing);
             } else if (subCommand == "clear") {
                 game.DeleteAllBloons();
-            }
-        } else if (command == "tower") {
-            string subCommand = values[1];
+            } else if (subCommand == "clearall") { }
 
-            if (subCommand == "place") {
+        } else if (command == "tower") {
+            string subCommand = values[1].ToLower();
+
+            if (subCommand == "spawn") {
                 TowerModel tower = GetTower(values[2]);
                 int xPos = int.Parse(values[3]);
                 int yPos = int.Parse(values[4]);
@@ -85,41 +86,65 @@ public class ConsoleUi : MonoBehaviour {
             }
 
         } else if (command == "cash") {
-            string subCommand = values[1];
-            int amount = int.Parse(values[2]);
-
-            if (subCommand == "add") {
-                game.SetCash(game.GetCash() + amount);
-            } else if (subCommand == "remove") {
-                game.SetCash(game.GetCash() - amount);
-            } else if (subCommand == "set") {
+            if (values.Length < 2) { return; }
+            if (int.TryParse(values[1], out _)) {
+                int amount = int.Parse(values[1]);
                 game.SetCash(amount);
+            } else {
+                if (values.Length < 3) { return; }
+                string subCommand = values[1].ToLower();
+                int amount = 0;
+                int.TryParse(values[2], out amount);
+                if (subCommand == "add") {
+                    game.SetCash(game.GetCash() + amount);
+                } else if (subCommand == "remove") {
+                    game.SetCash(game.GetCash() - amount);
+                } else if (subCommand == "set") {
+                    game.SetCash(amount);
+                } else if (subCommand == "reset") {
+                    game.SetCash(650);
+                }
             }
-
         } else if (command == "lives") {
-            string subCommand = values[1];
-            int amount = int.Parse(values[2]);
-
-            if (subCommand == "add") {
-                game.SetHealth(game.GetHealth() + amount);
-            } else if (subCommand == "remove") {
-                game.SetHealth(game.GetHealth() - amount);
-            } else if (subCommand == "set") {
+            if (values.Length < 2) { return; }
+            if (int.TryParse(values[1], out _)) {
+                int amount = int.Parse(values[1]);
                 game.SetHealth(amount);
+            } else {
+                if (values.Length < 3) { return; }
+                string subCommand = values[1].ToLower();
+                int amount = 0;
+                int.TryParse(values[2], out amount);
+                if (subCommand == "add") {
+                    game.SetHealth(game.GetHealth() + amount);
+                } else if (subCommand == "remove") {
+                    game.SetHealth(game.GetHealth() - amount);
+                } else if (subCommand == "set") {
+                    game.SetHealth(amount);
+                } else if (subCommand == "reset") {
+                    game.SetHealth(game.GetMaxHealth());
+                }
             }
-
         } else if (command == "round") {
-            string subCommand = values[1];
-            int amount = int.Parse(values[2]);
-
-            if (subCommand == "add") {
-                game.SetRound(game.bridge.GetCurrentRound() + amount);
-            } else if (subCommand == "remove") {
-                game.SetRound(game.bridge.GetCurrentRound() - amount);
-            } else if (subCommand == "set") {
+            if (values.Length < 2) { return; }
+            if (int.TryParse(values[1], out _)) {
+                int amount = int.Parse(values[1]);
                 game.SetRound(amount);
+            } else {
+                if (values.Length < 3) { return; }
+                string subCommand = values[1].ToLower();
+                int amount = 0;
+                int.TryParse(values[2], out amount);
+                if (subCommand == "add") {
+                    game.SetRound(game.bridge.GetCurrentRound() + amount);
+                } else if (subCommand == "remove") {
+                    game.SetRound(game.bridge.GetCurrentRound() - amount);
+                } else if (subCommand == "set") {
+                    game.SetRound(amount);
+                } else if (subCommand == "reset") {
+                    game.SetRound(0);
+                }
             }
-
         } else if (command == "fast") {
         }
 
@@ -145,31 +170,64 @@ public class ConsoleUi : MonoBehaviour {
         ModHelperButton closeButton = panel.AddButton(new Info("Close Button", 550, 0, 100), VanillaSprites.RedBtn, new Action(() => consoleUi.CloseConsole()));
     }
 
-    private TowerModel GetTower(string towerName) {
-        return towerName switch {
-            "dart" => Game.instance.model.GetTower(TowerType.DartMonkey, 0, 0, 0),
-            "boomer" => Game.instance.model.GetTower(TowerType.BoomerangMonkey, 0, 0, 0),
-            "bomb" => Game.instance.model.GetTower(TowerType.BombShooter, 0, 0, 0),
-            "tack" => Game.instance.model.GetTower(TowerType.TackShooter, 0, 0, 0),
-            "ice" => Game.instance.model.GetTower(TowerType.IceMonkey, 0, 0, 0),
-            "glue" => Game.instance.model.GetTower(TowerType.GlueGunner, 0, 0, 0),
-            "sniper" => Game.instance.model.GetTower(TowerType.SniperMonkey, 0, 0, 0),
-            "sub" => Game.instance.model.GetTower(TowerType.MonkeySub, 0, 0, 0),
-            "buccaneer" => Game.instance.model.GetTower(TowerType.MonkeyBuccaneer, 0, 0, 0),
-            "ace" => Game.instance.model.GetTower(TowerType.MonkeyAce, 0, 0, 0),
-            "heli" => Game.instance.model.GetTower(TowerType.HeliPilot, 0, 0, 0),
-            "mortar" => Game.instance.model.GetTower(TowerType.MortarMonkey, 0, 0, 0),
-            "dartling" => Game.instance.model.GetTower(TowerType.DartlingGunner, 0, 0, 0),
-            "wizard" => Game.instance.model.GetTower(TowerType.WizardMonkey, 0, 0, 0),
-            "super" => Game.instance.model.GetTower(TowerType.SuperMonkey, 0, 0, 0),
-            "ninja" => Game.instance.model.GetTower(TowerType.NinjaMonkey, 0, 0, 0),
-            "alchemist" => Game.instance.model.GetTower(TowerType.Alchemist, 0, 0, 0),
-            "druid" => Game.instance.model.GetTower(TowerType.Druid, 0, 0, 0),
-            "farm" => Game.instance.model.GetTower(TowerType.BananaFarm, 0, 0, 0),
-            "spike" => Game.instance.model.GetTower(TowerType.SpikeFactory, 0, 0, 0),
-            "village" => Game.instance.model.GetTower(TowerType.MonkeyVillage, 0, 0, 0),
-            "engineer" => Game.instance.model.GetTower(TowerType.EngineerMonkey, 0, 0, 0),
-            "beast" => Game.instance.model.GetTower(TowerType.BeastHandler, 0, 0, 0),
-        };
+    private string ConvertBloonId(string id) {
+        if (id == "red") {
+            return "Red";
+        } else {
+            return "Red";
+        }
+    }
+
+    private TowerModel GetTower(string id, int top = 0, int mid = 0, int bot = 0) {
+        id = id.ToLower();
+        if (id == "dart" || id.Contains("dartmonkey")) {
+            return Game.instance.model.GetTower(TowerType.DartMonkey, top, mid, bot);
+        } else if (id.Contains("boomer")) {
+            return Game.instance.model.GetTower(TowerType.BoomerangMonkey, top, mid, bot);
+        } else if (id.Contains("bomb")) {
+            return Game.instance.model.GetTower(TowerType.BombShooter, top, mid, bot);
+        } else if (id.Contains("tack")) {
+            return Game.instance.model.GetTower(TowerType.TackShooter, top, mid, bot);
+        } else if (id.Contains("ice")) {
+            return Game.instance.model.GetTower(TowerType.IceMonkey, top, mid, bot);
+        } else if (id.Contains("glue")) {
+            return Game.instance.model.GetTower(TowerType.GlueGunner, top, mid, bot);
+        } else if (id.Contains("sniper")) {
+            return Game.instance.model.GetTower(TowerType.SniperMonkey, top, mid, bot);
+        } else if (id.Contains("sub")) {
+            return Game.instance.model.GetTower(TowerType.MonkeySub, top, mid, bot);
+        } else if (id.Contains("buccaneer") || id.Contains("boat")) {
+            return Game.instance.model.GetTower(TowerType.MonkeyBuccaneer, top, mid, bot);
+        } else if (id.Contains("ace")) {
+            return Game.instance.model.GetTower(TowerType.MonkeyAce, top, mid, bot);
+        } else if (id.Contains("heli") || id.Contains("pilot")) {
+            return Game.instance.model.GetTower(TowerType.HeliPilot, top, mid, bot);
+        } else if (id.Contains("mortar")) {
+            return Game.instance.model.GetTower(TowerType.MortarMonkey, top, mid, bot);
+        } else if (id.Contains("dartling")) {
+            return Game.instance.model.GetTower(TowerType.DartlingGunner, top, mid, bot);
+        } else if (id.Contains("wizard")) {
+            return Game.instance.model.GetTower(TowerType.WizardMonkey, top, mid, bot);
+        } else if (id.Contains("super")) {
+            return Game.instance.model.GetTower(TowerType.SuperMonkey, top, mid, bot);
+        } else if (id.Contains("ninja")) {
+            return Game.instance.model.GetTower(TowerType.NinjaMonkey, top, mid, bot);
+        } else if (id.Contains("alchemist")) {
+            return Game.instance.model.GetTower(TowerType.Alchemist, top, mid, bot);
+        } else if (id.Contains("druid")) {
+            return Game.instance.model.GetTower(TowerType.Druid, top, mid, bot);
+        } else if (id.Contains("farm") || id.Contains("banana")) {
+            return Game.instance.model.GetTower(TowerType.BananaFarm, top, mid, bot);
+        } else if (id.Contains("spike") || id.Contains("factory")) {
+            return Game.instance.model.GetTower(TowerType.SpikeFactory, top, mid, bot);
+        } else if (id.Contains("village")) {
+            return Game.instance.model.GetTower(TowerType.MonkeyVillage, top, mid, bot);
+        } else if (id.Contains("engineer")) {
+            return Game.instance.model.GetTower(TowerType.EngineerMonkey, top, mid, bot);
+        } else if (id.Contains("beast") || id.Contains("handler")) {
+            return Game.instance.model.GetTower(TowerType.BeastHandler, top, mid, bot);
+        } else {
+            return Game.instance.model.GetTower(id, top, mid, bot);
+        }
     }
 }
