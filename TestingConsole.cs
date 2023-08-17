@@ -110,6 +110,7 @@ public class ConsoleUi : MonoBehaviour {
             if (int.TryParse(values[1], out _)) {
                 int amount = int.Parse(values[1]);
                 game.SetHealth(amount);
+                game.SetMaxHealth(game.GetHealth());
             } else {
                 if (values.Length < 3) { return; }
                 string subCommand = values[1].ToLower();
@@ -117,11 +118,15 @@ public class ConsoleUi : MonoBehaviour {
                 int.TryParse(values[2], out amount);
                 if (subCommand == "add") {
                     game.SetHealth(game.GetHealth() + amount);
+                    game.SetMaxHealth(game.GetHealth());
                 } else if (subCommand == "remove") {
                     game.SetHealth(game.GetHealth() - amount);
+                    game.SetMaxHealth(game.GetHealth());
                 } else if (subCommand == "set") {
+                    game.SetMaxHealth(amount);
                     game.SetHealth(amount);
                 } else if (subCommand == "reset") {
+                    game.SetMaxHealth(100);
                     game.SetHealth(game.GetMaxHealth());
                 }
             }
