@@ -10,6 +10,7 @@ using Il2CppAssets.Scripts.Unity.UI_New.InGame;
 using System.Linq;
 using Il2CppAssets.Scripts.Models.Towers;
 using Il2CppAssets.Scripts.Unity;
+using BTD_Mod_Helper.Api.ModOptions;
 
 [assembly: MelonInfo(typeof(TestingConsole.TestingConsole), ModHelperData.Name, ModHelperData.Version, ModHelperData.RepoOwner)]
 [assembly: MelonGame("Ninja Kiwi", "BloonsTD6")]
@@ -21,6 +22,8 @@ public class TestingConsole : BloonsTD6Mod {
     public static TestingConsole mod;
     public bool consoleOpen = false;
 
+    public static ModSettingHotkey keybind = new ModSettingHotkey(KeyCode.BackQuote);
+
     public override void OnApplicationStart() {
         ModHelper.Msg<TestingConsole>("TestingConsole loaded!");
         mod = this;
@@ -30,7 +33,7 @@ public class TestingConsole : BloonsTD6Mod {
         if (InGame.instance == null || InGame.instance.bridge == null) { return; }
         InGame game = InGame.instance;
 
-        if (Input.GetKeyDown(KeyCode.BackQuote)) {
+        if (keybind.JustPressed()) {
             RectTransform rect = game.uiRect;
             if (consoleOpen) {
                 ConsoleUi.instance.CloseConsole();
